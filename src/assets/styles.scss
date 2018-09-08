@@ -1,0 +1,80 @@
+body {
+    font-family: 'Roboto';font-size: 15px;
+}
+#product-page{
+    table {
+        width: 100%;
+        border: 1px solid #ccc;
+        tr {
+            background-color: white;
+            height: 30px;
+            width: 100%;
+            display: block;
+            td{
+                width: 18%;
+                display: inline-block;
+            }
+        }
+    }
+    .product-feature-heading{
+        background-color: rgba(0,0,0,0.02);
+        font-weight: bold;
+    }
+}
+
+#product-header {
+    h1{
+        display: inline-block;
+        width: 18%;
+        vertical-align: top;
+    }
+    #heading {
+        select {
+            width: 150px;
+        }   
+    }
+    #product-summary-wrapper{
+        width: 80%;
+        display: inline-block;
+        & > div {
+            display: inline-block;
+            width: 18%;
+        }
+    } 
+}
+.product-summary{
+    position: relative;
+    .delete{
+        position: absolute;
+        right: 10px;
+        top: -10px;
+        border: 1px solid #ccc;
+        width: 25px;
+        height: 25px;
+        text-align: center;
+        border-radius: 50%;
+        line-height: 25px;
+    }
+    img{
+        height: 100px;
+        text-align: center;
+    }
+    .title{
+        text-align: left;
+    }
+    .pricing{
+        font-weight: bold;
+        .discounted-price{
+            margin-right: 10px;
+        }
+        .original-price{
+            color: grey;
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+        .discount{
+            color: green;
+            margin-right: 10px;
+        }
+    }
+}
