@@ -22,11 +22,12 @@ getJSON('https://flipkart-mock-serve.now.sh', function (err, res) {
     }
 });
 
-const createSearchBox = function (productsIds, productDetails) {
-    let selectedProducts = productsIds.slice(0, 2);
+const createSearchBox = function (productsIds, productDetails, count=2) {
+    let selectedProducts = productsIds.slice(0, count);
     const searchNode = document.createElement('select');
-    const headingNode = document.getElementById('heading');
-    searchNode.innerHTML += '<option>Select to add product</option>';
+    const headingNode = document.getElementById('select-wrapper');
+    headingNode.innerHTML = '';
+    searchNode.innerHTML =+ '<option>Select to add product</option>';
     searchNode.addEventListener('change', function (event) {
         const selectProductId = event.target.value;
         if (selectedProducts.indexOf(selectProductId) === -1) {
@@ -46,13 +47,13 @@ const createSearchBox = function (productsIds, productDetails) {
 
 const populateProductDetails = function (selectedProducts, productDetails) {
     createTable(selectedProducts, productDetails);
-    createProductHeader(productDetails.compareSummary, selectedProducts);
+    createProductHeader(productDetails.compareSummary, selectedProducts, productDetails);
 }
 
 const createTable = function (productsIds, productDetails) {
     const tableNode = document.createElement('table');
     const productPageNode = document.getElementById('product-page');
-    productPageNode.innerHTML =+ '';
+    productPageNode.innerHTML = '';
     productPageNode.appendChild(tableNode);
     const productFeatures = productDetails.featuresList;
     for (let featureindex = 0; featureindex < productFeatures.length; featureindex++) {
@@ -78,17 +79,36 @@ const createTable = function (productsIds, productDetails) {
     }
 }
 
-const createProductHeader = function (summary, productIds) {
+const createProductHeader = function (summary, productIds, productDetails) {
     const headerNode = document.getElementById("product-summary-wrapper");
     headerNode.innerHTML = +'';
     for (let productSelectedIndex = 0; productSelectedIndex < productIds.length; productSelectedIndex++) {
         const productId = productIds[productSelectedIndex];
         const productSummaryCode = document.createElement('div');
-        productSummaryCode.innerHTML = `<div class="product-summary"><div class="delete" onClick="deleteProduct('${productId}')">X</div><img src="${summary.images[productId]}"/> <div class="title">${summary.titles[productId].title}</div><div class="pricing"><span class="discounted-price">${summary.productPricingSummary[productId].finalPrice}</span><span class="original-price">${summary.productPricingSummary[productId].price}</span><span class="discount">${summary.productPricingSummary[productId].totalDiscount}</span></div></div>`;
+        productSummaryCode.innerHTML = `<div class="product-summary">
+                <img src="${summary.images[productId]}"/> 
+                <div class="title">${summary.titles[productId].title}</div>
+                <div class="pricing">
+                    <span class="discounted-price">${summary.productPricingSummary[productId].finalPrice}</span>
+                    <span class="original-price">${summary.productPricingSummary[productId].price}</span>
+                    <span class="discount">${summary.productPricingSummary[productId].totalDiscount}</span>
+                </div>
+            </div>`;
         headerNode.appendChild(productSummaryCode);
+        const deleteOption = document.createElement('div');
+        deleteOption.className = 'delete';
+        deleteOption.id = `${productId}`;
+        deleteOption.innerHTML = `<span id="${productId}">x</span>`;
+        deleteOption.addEventListener('click', function(event) {
+            const newProductIds = JSON.parse(JSON.stringify(productIds));
+            var index = newProductIds.indexOf(event.target.id);
+            if (index > -1) {
+                newProductIds.splice(index, 1);
+            }
+            console.log(productIds);
+            createSearchBox(productIds, productDetails, newProductIds.length);
+        });
+        const smg = productSummaryCode.getElementsByClassName('product-summary')[0];
+        smg.appendChild(deleteOption);
     }
-}
-
-const deleteProduct = function(productId) {
-    console.log(`Delete - ${productId}`);
 }
